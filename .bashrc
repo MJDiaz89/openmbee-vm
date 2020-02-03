@@ -40,10 +40,10 @@ setup() {
     ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant up -d
 
     # echo ">>> Initializing the database service (PostgreSQL)"
-    # initialize_db
+    initialize_db
 
     # echo ">>> Initializing the search service (Elasticsearch)"
-    # initialize_search
+    initialize_search
     # echo ""
 
     #transfer the corrected files to the docker tomcat directories:
@@ -57,7 +57,7 @@ setup() {
 
     #coerce (again) Postgres to create the required `alfresco` and `mms` databases
     # echo ">>> ensuring the necessary databases were created"
-    # initialize_db
+    #initialize_db
 
     echo ">>> You can now use 'dc logs' to inspect the services"
 }
@@ -95,7 +95,7 @@ initialize_db() {
         echo "  > Creating 'postgres' user"
         ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} createuser -s --username=${PG_DB_NAME} postgres
 
-        if `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U ${PG_DB_NAME} postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1; then
+        if [ `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U ${PG_DB_NAME} postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]; then
             echo "  > Successfully created 'postgres' user"
         else
             echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m" #error in red text (https://stackoverflow.com/a/5947802/5094375)
