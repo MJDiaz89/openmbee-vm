@@ -89,6 +89,12 @@ services:
       - ALFRESCO_DB=alfresco
     networks:
       - internal
+    ports:
+      - target: "${PG_PORT:-5432}"
+        published: "${PG_PORT:-5432}"
+        protocol: tcp
+        mode: host
+    restart: on-failure
 
 volumes:
   alf_logs:
