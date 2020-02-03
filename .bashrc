@@ -26,28 +26,38 @@ enter() {
 }
 
 setup() {
+    echo ">>> Creating required volumes"
+    docker volume create alf_logs
+    docker volume create alfresco-data-volume
+    docker volume create postgres-data-volume
+    docker volume create activemq-data-volume
+    docker volume create activemq-log-volume
+    docker volume create activemq-conf-volume
+    docker volume create elastic-data-volume
+    docker volume create nginx-external-volume
+    
     echo ">>> Starting containerized services"
     ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant up -d
 
-    echo ">>> Initializing the database service (PostgreSQL)"
-    initialize_db
+    # echo ">>> Initializing the database service (PostgreSQL)"
+    # initialize_db
 
-    echo ">>> Initializing the search service (Elasticsearch)"
-    initialize_search
-    echo ""
+    # echo ">>> Initializing the search service (Elasticsearch)"
+    # initialize_search
+    # echo ""
 
     #transfer the corrected files to the docker tomcat directories:
     #the .properties files change Alfresco to use the HTTP protocol instead of the HTTPS (the default); the tomcat-users files creates necessary admin user
     #after files are written, restart openmbee-mms container for changes to take effect
-    echo ">>> copy correct config files to vagrant vm..."
-    docker exec -i openmbee-mms sh -c "cat > /usr/local/tomcat/shared/classes/alfresco-global.properties" < /vagrant/alfresco-global.properties
-    docker exec -i openmbee-mms sh -c "cat > /usr/local/tomcat/shared/classes/mms.properties" < /vagrant/mms.properties
-    docker exec -i openmbee-mms sh -c "cat > /usr/local/tomcat/conf/tomcat-users.xml" < /vagrant/tomcat-users.xml
-    docker restart openmbee-mms
+    # echo ">>> copy correct config files to vagrant vm..."
+    # docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/shared/classes/alfresco-global.properties" < /vagrant/alfresco-global.properties
+    # docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/shared/classes/mms.properties" < /vagrant/mms.properties
+    # docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/conf/tomcat-users.xml" < /vagrant/tomcat-users.xml
+    # docker restart v342-mms
 
     #coerce (again) Postgres to create the required `alfresco` and `mms` databases
-    echo ">>> ensuring the necessary databases were created"
-    initialize_db
+    # echo ">>> ensuring the necessary databases were created"
+    # initialize_db
 
     echo ">>> You can now use 'dc logs' to inspect the services"
 }

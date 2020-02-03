@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "MMS Server"
+    vb.name = "MMS VE Server"
     vb.cpus = 4
     vb.memory = 12288  # Solr requires a lot of RAM
     vb.gui = false
