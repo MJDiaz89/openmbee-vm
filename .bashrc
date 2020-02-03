@@ -90,6 +90,20 @@ initialize_db() {
         sleep ${PG_WAIT}
     fi
 
+    # need to create `postgres` user
+    if ! `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
+        echo "  > Creating `postgres` user"
+        ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} createuser -s --username=mms postgres
+
+        if `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1; then
+            echo "  > Successfully created `postgres` user"
+        else
+            echo "  > Error creating `postgres` user"
+        fi
+    else
+        echo "  > User `postgres` already exists"
+    fi
+
     # Check to see if new user has ability to create databases
     if `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U ${PG_USERNAME} -c "${PG_TEST_CREATEDB_ROLE_COMMAND}" | grep -q "(0 row)"`; then
         echo "  > Giving '${PG_USERNAME}' permission to create databases"
