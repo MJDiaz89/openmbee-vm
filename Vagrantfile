@@ -3,6 +3,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/centos-7.5"
 
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  
+  config.vm.define "mms_ve_test"
 
   config.vm.provider "virtualbox" do |vb|
     vb.name = "MMS VE Server"
