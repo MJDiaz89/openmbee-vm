@@ -90,10 +90,7 @@ services:
     networks:
       - internal
     ports:
-      - target: "${PG_PORT:-5432}"
-        published: "${PG_PORT:-5432}"
-        protocol: tcp
-        mode: host
+      - "${PG_PORT:-5432}:${PG_PORT:-5432}"
     restart: on-failure
 
 volumes:
