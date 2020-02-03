@@ -92,16 +92,16 @@ initialize_db() {
 
     # need to create `postgres` user
     if ! `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U ${PG_DB_NAME} postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
-        echo "  > Creating `postgres` user"
+        echo "  > Creating 'postgres' user"
         ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} createuser -s --username=${PG_DB_NAME} postgres
 
         if `${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant exec -T ${PG_SERVICE_NAME} psql -U ${PG_DB_NAME} postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1; then
-            echo "  > Successfully created `postgres` user"
+            echo "  > Successfully created 'postgres' user"
         else
-            echo "  > Error creating `postgres` user"
+            echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m" #error in red text (https://stackoverflow.com/a/5947802/5094375)
         fi
     else
-        echo "  > User `postgres` already exists"
+        echo "  > User 'postgres' already exists"
     fi
 
     # Check to see if new user has ability to create databases
