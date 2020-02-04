@@ -1,3 +1,10 @@
+echo ">>> removing old docker containers";
+docker rm -f v342-mms v342-elastic v342-activemq v342-solr v342-postgres;
+
+echo ">>> docker-compose up..."
+docker-compose up > docker-compose-logs.txt;
+echo ">>> docker-compose done "
+
 # need to create `postgres` user
 if ! `docker exec -T postgresql psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
     echo "  > Creating 'postgres' user";
