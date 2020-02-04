@@ -30,7 +30,7 @@ services:
       - /tmp
       - /usr/local/tomcat/temp/
       - /usr/local/tomcat/work/
-    restart: on-failure
+    #restart: on-failure
 
   solr:
     image: openmbeeguest/mms-solr:3.4.2.2-SNAPSHOT
@@ -46,7 +46,7 @@ services:
       - /tmp
       - /usr/local/tomcat/temp/
       - /usr/local/tomcat/work/
-    restart: on-failure
+    #restart: on-failure
 
   activemq:
     image: openmbeeguest/mms-activemq:3.4.2.2-SNAPSHOT
@@ -64,7 +64,7 @@ services:
       - ACTIVEMQ_ADMIN_PASSWORD admin
     networks:
       - internal
-    restart: on-failure
+    #restart: on-failure
 
   elastic:
     image: openmbeeguest/mms-elastic:3.4.2.2-SNAPSHOT
@@ -77,7 +77,7 @@ services:
       - elastic-data-volume:/tmp/elasticsearch/nodes
     networks:
       - internal
-    restart: on-failure
+    #restart: on-failure
 
   postgresql:
     image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
@@ -95,7 +95,7 @@ services:
       - internal
     ports:
       - "${PG_PORT:-5432}:${PG_PORT:-5432}"
-    restart: on-failure
+    #restart: on-failure
 
 volumes:
   alf_logs:
