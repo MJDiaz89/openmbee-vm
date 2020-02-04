@@ -83,10 +83,7 @@ services:
     networks:
       - internal
     ports:
-      - target: 9200
-        published: "${ES_PORT:-9200}"
-        protocol: tcp
-        mode: host
+      - 9200:9200
 
   postgresql:
     image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
