@@ -4,17 +4,16 @@ docker rm -f v342-mms v342-elastic v342-activemq v342-solr v342-postgres;
 
 echo ">>> docker-compose up..."
 docker-compose up -d;
-docker-compose logs --no-color > docker-compose-logs.txt;
-echo ">>> docker-compose done. Logs saved to 'docker-compose-logs.txt'"
+echo ">>> docker-compose done.'"
 
 
 # ========= Postgres =========
 # need to create `postgres` user
-if ! `docker exec -it v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
+if ! `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
     echo "  > Creating 'postgres' user";
-    docker exec -it v342-postgres createuser -s --username=mms postgres;
+    docker exec -i v342-postgres createuser -s --username=mms postgres;
 
-    if [[ `docker exec -it v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]]; then
+    if [[ `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]]; then
         echo "  > Successfully created 'postgres' user";
     else
         echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m"; #error in red text (https://stackoverflow.com/a/5947802/5094375)
@@ -26,23 +25,29 @@ fi
 
 # ========= Elasticsearch =========
 # fix bad  permissions
-echo ">>> Fixing bad permissions in Elasticsearch";
+echo ">>> Fixing bad permissions in Elasticsearch...";
 docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch";
 docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /var/data";
 
 #update mss-mappings
-echo ">>> Fixing bad permissions in Elasticsearch";
+echo ">>> Copying correct config files to Elasticsearch...";
 docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
 
 
 # ========= MMS =========
-echo ">>> copy correct config files to vagrant vm...";
+echo ">>> Copying correct config files to tomcat...";
 docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/shared/classes/alfresco-global.properties" < alfresco-global.properties;
 docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/shared/classes/mms.properties" < mms.properties;
 docker exec -i v342-mms sh -c "cat > /usr/local/tomcat/conf/tomcat-users.xml" < tomcat-users.xml;
 
 
 # ========= clean up =========
-echo ">>> restarting all containers...";
-docker restart  v342-elastic v342-activemq v342-solr v342-postgres v342-mms;
-echo ">>> all containers restarted";
+echo ">>> Restarting all containers...";
+docker restart v342-elastic v342-activemq v342-solr v342-postgres v342-mms;
+echo ">>> All containers restarted";
+
+echo ">>> Sleeping to allow all containers to restart...";
+sleep 10;
+
+docker-compose logs --no-color > docker-compose-logs.txt;
+echo ">>> docker-compose logs saved to 'docker-compose-logs.txt'"
