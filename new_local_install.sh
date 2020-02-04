@@ -32,7 +32,7 @@ docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsea
 
 #update mss-mappings
 echo ">>> Fixing bad permissions in Elasticsearch";
-docker exec -i --privileged=true -u root v342-elastic sh -c "mms-mappings.sh" < mms-mappings.sh;
+docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
 
 
 # ========= MMS =========
