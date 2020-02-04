@@ -39,10 +39,10 @@ setup() {
     echo ">>> Starting containerized services"
     ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant up -d
 
-    # echo ">>> Initializing the database service (PostgreSQL)"
+    echo ">>> Initializing the database service (PostgreSQL)"
     initialize_db
 
-    # echo ">>> Initializing the search service (Elasticsearch)"
+    echo ">>> Initializing the search service (Elasticsearch)"
     initialize_search
     # echo ""
 
@@ -156,4 +156,17 @@ initialize_search() {
             echo ">>> Failed to upload the MMS Template to Elasticsearch"
         fi
     fi
+
+    # fix bad permissions
+    echo ">>> Fixing bad permissions in Elasticsearch"
+    docker exec -it --priviledged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /tmp/elasticresearch"
+    docker exec -it --priviledged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /var/data"
+
+    #update mss-mappings
+    echo ">>> Fixing bad permissions in Elasticsearch"
+    docker exec -it --priviledged=true -u root v342-elastic sh -c "mms-mappings.sh" < /vagrant/mms-mappings.sh
+    
+    #restart
+    echo ">>> restarting Elasticsearch"
+    docker restart v342-elastic
 }
