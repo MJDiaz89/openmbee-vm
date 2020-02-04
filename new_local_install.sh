@@ -22,45 +22,49 @@ echo ">>> docker-compose done.'"
 #     echo "  > User 'postgres' already exists";
 # fi
 # Check to see if new user has ability to create databases
-echo "Sleeping to allow postgres to start..."
+echo "Sleeping to allow postgres to start...";
 sleep 10;
-echo "Resuming..."
+echo "Resuming...";
 
-PG_TEST_CREATEDB_ROLE_COMMAND="select rolcreatedb from pg_roles where rolname = current_user"
-PG_DB_CREATION_COMMAND="create table if not exists organizations (   id bigserial primary key,   orgId text not null,   orgName text not null,   constraint unique_organizations unique(orgId, orgName) ); create index orgId on organizations(orgId);  create table projects (   id bigserial primary key,   projectId text not null,   orgId integer references organizations(id),   name text not null,   location text not null,   constraint unique_projects unique(orgId, projectId) ); create index projectIdIndex on projects(projectid);"
-if `docker exec -i v342-postgres psql -U mms -c "${PG_TEST_CREATEDB_ROLE_COMMAND}" | grep -q "(0 row)"`; then
-    echo "  > Giving 'mms' permission to create databases..."
-    docker exec -i v342-postgres psql -U mms -c "ALTER ROLE mms CREATEDB"
-    echo "  > 'mms' now has permission to create databases"
+PG_TEST_CREATEDB_ROLE_COMMAND="select rolcreatedb from pg_roles where rolname = current_user";
+PG_DB_CREATION_COMMAND="create table if not exists organizations (   id bigserial primary key,   orgId text not null,   orgName text not null,   constraint unique_organizations unique(orgId, orgName) ); create index orgId on organizations(orgId);  create table projects (   id bigserial primary key,   projectId text not null,   orgId integer references organizations(id),   name text not null,   location text not null,   constraint unique_projects unique(orgId, projectId) ); create index projectIdIndex on projects(projectid);";
+if `docker exec -i v342-postgres psql -U mms -c "${PG_TEST_CREATEDB_ROLE_COMMAND}" | grep -q "(0 row)"`; 
+then
+    echo "  > Giving 'mms' permission to create databases...";
+    docker exec -i v342-postgres psql -U mms -c "ALTER ROLE mms CREATEDB";
+    echo "  > 'mms' now has permission to create databases";
 else
-    echo "  > User 'mms' already has permissions to create databases"
+    echo "  > User 'mms' already has permissions to create databases";
 fi
 
-if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw alfresco`; then
-    echo "  > Creating the Alfresco database ('alfresco')"
-    docker exec -i v342-postgres createdb -U mms alfresco
-    echo "  > Alfresco database ('alfresco') created"
+if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw alfresco`; 
+then
+    echo "  > Creating the Alfresco database ('alfresco')";
+    docker exec -i v342-postgres createdb -U mms alfresco;
+    echo "  > Alfresco database ('alfresco') created";
 else
-    echo "  > Alfresco database ('alfresco') already exists"
+    echo "  > Alfresco database ('alfresco') already exists";
 else
 
 fi
 
-if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw mms`; then
-    echo "  > Creating the MMS database ('mms')"
-    docker exec -i v342-postgres createdb -U mms mms
-    echo "  > MMS database ('mms') created"
+if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw mms`; 
+then
+    echo "  > Creating the MMS database ('mms')";
+    docker exec -i v342-postgres createdb -U mms mms;
+    echo "  > MMS database ('mms') created";
 else
-    echo "  > MMS database ('mms') already exists"
+    echo "  > MMS database ('mms') already exists";
 fi
 
 
-if ! `docker exec -i v342-postgres psql -U mms -d mms -c "\dt" | grep -qw organizations`; then
-    echo "  > Creating org/proj tables... "
-    docker exec -i v342-postgres psql -U mms -d mms -c "${PG_DB_CREATION_COMMAND}"
-    echo "  > org/proj tables created"
+if ! `docker exec -i v342-postgres psql -U mms -d mms -c "\dt" | grep -qw organizations`; 
+then
+    echo "  > Creating org/proj tables... ";
+    docker exec -i v342-postgres psql -U mms -d mms -c "${PG_DB_CREATION_COMMAND}";
+    echo "  > org/proj tables created";
 else
-    echo "  > org/proj tables already exist"
+    echo "  > org/proj tables already exist";
 fi
 
 # ========= Elasticsearch =========
