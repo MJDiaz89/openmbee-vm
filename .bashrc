@@ -68,9 +68,9 @@ teardown() {
     ${DOCKER_COMPOSE_LOCATION} -f /vagrant/docker-compose.yml --project-directory /vagrant rm -f -v
     docker system prune -f
     docker volume prune -f
-    if [[ -f ${ES_MAPPING_TEMPLATE_FILE} ]]; then
-        rm ${ES_MAPPING_TEMPLATE_FILE}
-    fi
+    # if [[ -f ${ES_MAPPING_TEMPLATE_FILE} ]]; then
+    #     rm ${ES_MAPPING_TEMPLATE_FILE}
+    # fi
 }
 
 clean_restart() {
@@ -146,16 +146,16 @@ initialize_search() {
         ES_RESPONSE=`curl -s -XGET http://127.0.0.1:${ES_PORT}/_template/template`
     fi
 
-    if [[ "${ES_RESPONSE}" == "{}" ]]; then
-        echo " >> Uploading MMS Mapping Template File to Elasticsearch"
-        curl -XPUT http://127.0.0.1:${ES_PORT}/_template/template -d @${ES_MAPPING_TEMPLATE_FILE}
+    # if [[ "${ES_RESPONSE}" == "{}" ]]; then
+    #     echo " >> Uploading MMS Mapping Template File to Elasticsearch"
+    #     curl -XPUT http://127.0.0.1:${ES_PORT}/_template/template -d @${ES_MAPPING_TEMPLATE_FILE}
 
-        ES_RESPONSE=`curl -s -XGET http://127.0.0.1:${ES_PORT}/_template/template`
-        if [[ "${ES_RESPONSE}" == "{}" ]]; then
-            echo ""
-            echo ">>> Failed to upload the MMS Template to Elasticsearch"
-        fi
-    fi
+    #     ES_RESPONSE=`curl -s -XGET http://127.0.0.1:${ES_PORT}/_template/template`
+    #     if [[ "${ES_RESPONSE}" == "{}" ]]; then
+    #         echo ""
+    #         echo ">>> Failed to upload the MMS Template to Elasticsearch"
+    #     fi
+    # fi
 
     # fix bad permissions
     echo ">>> Fixing bad permissions in Elasticsearch"
