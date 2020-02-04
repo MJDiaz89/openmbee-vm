@@ -26,13 +26,33 @@ fi
 # ========= Elasticsearch =========
 # fix bad  permissions
 echo ">>> Fixing bad permissions in Elasticsearch...";
-docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch";
-docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /var/data";
+# docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch";
+# docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch/nodes";
+# docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /var/data";
+# docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /var/data/nodes";
 
 #update mss-mappings
 echo ">>> Copying correct config files to Elasticsearch...";
-docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
+#docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
+ES_RESPONSE=`curl -s -XGET http://127.0.0.1:9200/_template/template`
+if [[ "${ES_RESPONSE:0:1}" != "{" ]]; then
+    echo "  > Sleeping to make sure Elasticsearch is running"
+    sleep ${ES_WAIT}
 
+    echo "  > Re-requesting template from Elasticsearch"
+    ES_RESPONSE=`curl -s -XGET http://127.0.0.1:9200/_template/template`
+fi
+
+if [[ "${ES_RESPONSE}" == "{}" ]]; then
+    echo " >> Uploading MMS Mapping Template File to Elasticsearch"
+    curl -XPUT http://127.0.0.1:9200/_template/template -H "Content-Type: application/json" -d @mapping_template.json
+
+    ES_RESPONSE=`curl -s -XGET http://127.0.0.1:9200/_template/template`
+    if [[ "${ES_RESPONSE}" == "{}" ]]; then
+        echo ""
+        echo ">>> Failed to upload the MMS Template to Elasticsearch"
+    fi
+fi
 
 # ========= MMS =========
 echo ">>> Copying correct config files to tomcat...";
@@ -47,7 +67,7 @@ docker restart v342-elastic v342-activemq v342-solr v342-postgres v342-mms;
 echo ">>> All containers restarted";
 
 echo ">>> Sleeping to allow all containers to restart...";
-sleep 10;
+sleep 30;
 
 docker-compose logs --no-color > docker-compose-logs.txt;
 echo ">>> docker-compose logs saved to 'docker-compose-logs.txt'"

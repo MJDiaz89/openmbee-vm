@@ -1,0 +1,16 @@
+--2020-02-04 11:42:25--  https://github.com/Open-MBEE/mms/raw/develop/mms-ent/repo-amp/src/main/resources/mapping_template.json
+Resolving github.com (github.com)... 192.30.255.113
+Connecting to github.com (github.com)|192.30.255.113|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://raw.githubusercontent.com/Open-MBEE/mms/develop/mms-ent/repo-amp/src/main/resources/mapping_template.json [following]
+--2020-02-04 11:42:25--  https://raw.githubusercontent.com/Open-MBEE/mms/develop/mms-ent/repo-amp/src/main/resources/mapping_template.json
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 199.232.64.133
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|199.232.64.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 9385 (9.2K) [text/plain]
+Saving to: ‘mapping_template.json.1’
+
+     0K .........                                             100% 68.9M=0s
+
+2020-02-04 11:42:25 (68.9 MB/s) - ‘mapping_template.json.1’ saved [9385/9385]
+

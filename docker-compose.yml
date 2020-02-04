@@ -67,17 +67,26 @@ services:
     #restart: on-failure
 
   elastic:
-    image: openmbeeguest/mms-elastic:3.4.2.2-SNAPSHOT
+    # image: openmbeeguest/mms-elastic:3.4.2.2-SNAPSHOT
     container_name: v342-elastic
-    environment:
-      CLEAN: 'false'
-    ports:
-      - 9200:9200
-    volumes:
-      - elastic-data-volume:/tmp/elasticsearch/nodes
+    # environment:
+    #   CLEAN: 'false'
+    # ports:
+    #   - 9200:9200
+    # volumes:
+    #   - elastic-data-volume:/tmp/elasticsearch/nodes
+    # networks:
+    #   - internal
+    #restart: on-failure
+    image: elasticsearch:5.5-alpine
+    #container_name: openmbee-elasticsearch
     networks:
       - internal
-    #restart: on-failure
+    ports:
+      - target: 9200
+        published: "${ES_PORT:-9200}"
+        protocol: tcp
+        mode: host
 
   postgresql:
     image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
