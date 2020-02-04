@@ -86,22 +86,35 @@ services:
       - 9200:9200
 
   postgresql:
-    image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
-    container_name: v342-postgres
-    volumes:
-       - postgres-data-volume:/var/lib/postgresql/data
-    environment:
-      - MMS_DB_USER=mms
-      - MMS_DB_PASSWORD=mmspass
-      - MMS_DB=mms
-      - ALFRESCO_DB_USER=mms
-      - ALFRESCO_DB_PASSWORD=mmspass
-      - ALFRESCO_DB=alfresco
-    networks:
-      - internal
+    # image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
+    # container_name: v342-postgres
+    # volumes:
+    #    - postgres-data-volume:/var/lib/postgresql/data
+    # environment:
+    #   - MMS_DB_USER=mms
+    #   - MMS_DB_PASSWORD=mmspass
+    #   - MMS_DB=mms
+    #   - ALFRESCO_DB_USER=mms
+    #   - ALFRESCO_DB_PASSWORD=mmspass
+    #   - ALFRESCO_DB=alfresco
+    # networks:
+    #   - internal
     ports:
       - "${PG_PORT:-5432}:${PG_PORT:-5432}"
     #restart: on-failure
+    image: postgres:9.4-alpine
+    # container_name: openmbee-postgres
+    environment:
+      POSTGRES_USER: "mms"
+      POSTGRES_PASSWORD: "mmspass"
+      POSTGRES_PORT: "${PG_PORT:-5432}"
+    networks:
+      - internal
+    # ports:
+    #   - target: "${PG_PORT:-5432}"
+    #     published: "${PG_PORT:-5432}"
+    #     protocol: tcp
+    #     mode: host
 
 volumes:
   alf_logs:

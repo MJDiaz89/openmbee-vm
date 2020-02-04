@@ -9,23 +9,23 @@ echo ">>> docker-compose done.'"
 
 # ========= Postgres =========
 # need to create `postgres` user
-if ! `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
-    echo "  > Creating 'postgres' user";
-    docker exec -i v342-postgres createuser -s --username=mms postgres;
+# if ! `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
+#     echo "  > Creating 'postgres' user";
+#     docker exec -i v342-postgres createuser -s --username=mms postgres;
 
-    if [[ `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]]; then
-        echo "  > Successfully created 'postgres' user";
-    else
-        echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m"; #error in red text (https://stackoverflow.com/a/5947802/5094375)
-    fi
-else
-    echo "  > User 'postgres' already exists";
-fi
+#     if [[ `docker exec -i v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]]; then
+#         echo "  > Successfully created 'postgres' user";
+#     else
+#         echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m"; #error in red text (https://stackoverflow.com/a/5947802/5094375)
+#     fi
+# else
+#     echo "  > User 'postgres' already exists";
+# fi
 
 
 # ========= Elasticsearch =========
 # fix bad  permissions
-echo ">>> Fixing bad permissions in Elasticsearch...";
+# echo ">>> Fixing bad permissions in Elasticsearch...";
 # docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch";
 # docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /tmp/elasticsearch/nodes";
 # docker exec -i --privileged=true -u root v342-elastic sh -c "chown -R elasticsearch:elasticsearch /var/data";
