@@ -87,7 +87,7 @@ services:
 
   postgresql:
     # image: openmbeeguest/mms-postgres:3.4.2.2-SNAPSHOT
-    # container_name: v342-postgres
+    container_name: v342-postgres
     # volumes:
     #    - postgres-data-volume:/var/lib/postgresql/data
     # environment:
