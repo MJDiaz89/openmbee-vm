@@ -9,11 +9,11 @@ echo ">>> docker-compose done. Logs saved to 'docker-compose-logs.txt'"
 
 # ========= Postgres =========
 # need to create `postgres` user
-if ! `docker exec -T postgresql psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
+if ! `docker exec -it postgresql psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q "1"`; then
     echo "  > Creating 'postgres' user";
-    docker exec -T postgresql createuser -s --username=mms postgres;
+    docker exec -it postgresql createuser -s --username=mms postgres;
 
-    if [ `docker exec -T postgresql psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]; then
+    if [ `docker exec -it postgresql psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]; then
         echo "  > Successfully created 'postgres' user";
     else
         echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m"; #error in red text (https://stackoverflow.com/a/5947802/5094375)
