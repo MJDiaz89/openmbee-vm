@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo ">>> removing old docker containers";
 docker rm -f v342-mms v342-elastic v342-activemq v342-solr v342-postgres;
 
