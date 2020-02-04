@@ -14,7 +14,7 @@ if ! `docker exec -it v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_
     echo "  > Creating 'postgres' user";
     docker exec -it v342-postgres createuser -s --username=mms postgres;
 
-    if [ `docker exec -it v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]; then
+    if [[ `docker exec -it v342-postgres psql -U mms postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'"` == 1 ]]; then
         echo "  > Successfully created 'postgres' user";
     else
         echo -e "  \033[0;31m> Error creating 'postgres' user\033[0m"; #error in red text (https://stackoverflow.com/a/5947802/5094375)
