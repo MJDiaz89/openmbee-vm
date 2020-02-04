@@ -21,7 +21,26 @@ echo ">>> docker-compose done.'"
 # else
 #     echo "  > User 'postgres' already exists";
 # fi
+# Check to see if new user has ability to create databases
+PG_DB_CREATION_COMMAND="create table if not exists organizations (   id bigserial primary key,   orgId text not null,   orgName text not null,   constraint unique_organizations unique(orgId, orgName) ); create index orgId on organizations(orgId);  create table projects (   id bigserial primary key,   projectId text not null,   orgId integer references organizations(id),   name text not null,   location text not null,   constraint unique_projects unique(orgId, projectId) ); create index projectIdIndex on projects(projectid);"
+if `docker exec -i v342-postgres psql -U mms -c "${PG_TEST_CREATEDB_ROLE_COMMAND}" | grep -q "(0 row)"`; then
+    echo "  > Giving 'mms' permission to create databases"
+    docker exec -i v342-postgres psql -U mms -c "ALTER ROLE mms CREATEDB"
+fi
 
+if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw alfresco`; then
+    echo "  > Creating the Alfresco database ('alfresco')"
+    docker exec -i v342-postgres createdb -U mms alfresco
+fi
+
+if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw mms`; then
+    echo "  > Creating the MMS database ('mms')"
+    docker exec -i v342-postgres createdb -U mms mms
+fi
+
+if ! `docker exec -i v342-postgres psql -U mms -d mms -c "\dt" | grep -qw organizations`; then
+    docker exec -i v342-postgres psql -U mms -d mms -c "${PG_DB_CREATION_COMMAND}"
+fi
 
 # ========= Elasticsearch =========
 # fix bad  permissions
@@ -35,13 +54,13 @@ echo ">>> docker-compose done.'"
 echo ">>> Copying correct config files to Elasticsearch...";
 #docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
 sleep 10;
-echo " >> Uploading MMS Mapping Template File to Elasticsearch"
-ES_RESPONSE=$(curl -XPUT http://127.0.0.1:9200/_template/template -H "Content-Type: application/json" -d @mapping_template.json)
+echo " >> Uploading MMS Mapping Template File to Elasticsearch..."
+ES_RESPONSE=$(curl -XPUT http://127.0.0.1:9200/_template/template -H "Content-iype: application/json" -d @mapping_template.json)
 if [ "${ES_RESPONSE}" == "{\"acknowledged\":true}" ] 
 then
-    echo ">>> Successfully uploaded MMS Template to Elasticsearch"
+    echo "  > Successfully uploaded MMS Template to Elasticsearch"
 else
-    echo ">>> Failed to upload the MMS Template to Elasticsearch"
+    echo "  > Failed to upload the MMS Template to Elasticsearch"
 fi
 
 # ========= MMS =========
