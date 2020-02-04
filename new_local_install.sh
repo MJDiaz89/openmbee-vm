@@ -44,8 +44,6 @@ then
     echo "  > Alfresco database ('alfresco') created";
 else
     echo "  > Alfresco database ('alfresco') already exists";
-else
-
 fi
 
 if ! `docker exec -i v342-postgres psql -lqt -U mms | cut -d \| -f 1 | grep -qw mms`; 
