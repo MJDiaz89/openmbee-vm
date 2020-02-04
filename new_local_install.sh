@@ -27,12 +27,12 @@ fi
 # ========= Elasticsearch =========
 # fix bad  permissions
 echo ">>> Fixing bad permissions in Elasticsearch";
-docker exec -it --priviledged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /tmp/elasticresearch";
-docker exec -it --priviledged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /var/data";
+docker exec -it --privileged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /tmp/elasticresearch";
+docker exec -it --privileged=true -u root v342-elastic sh -c "chown -R elasticresearch:elasticresearch /var/data";
 
 #update mss-mappings
 echo ">>> Fixing bad permissions in Elasticsearch";
-docker exec -it --priviledged=true -u root v342-elastic sh -c "mms-mappings.sh" < /vagrant/mms-mappings.sh;
+docker exec -it --privileged=true -u root v342-elastic sh -c "mms-mappings.sh" < mms-mappings.sh;
 
 
 # ========= MMS =========
