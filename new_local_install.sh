@@ -34,10 +34,10 @@ echo ">>> Fixing bad permissions in Elasticsearch...";
 #update mss-mappings
 echo ">>> Copying correct config files to Elasticsearch...";
 #docker exec -i --privileged=true -u root v342-elastic sh -c "cat > mms-mappings.sh" < mms-mappings.sh;
-ES_RESPONSE=`curl -XPUT http://127.0.0.1:9200/_template/template -H "Content-Type: application/json" -d @mapping_template.json`
+ES_RESPONSE=$(curl -XPUT http://127.0.0.1:9200/_template/template -H "Content-Type: application/json" -d @mapping_template.json)
 sleep 10;
 echo " >> Uploading MMS Mapping Template File to Elasticsearch"
-if [ "${ES_RESPONSE}" == '{"acknowledged":true}' ]; then
+if [ "${ES_RESPONSE}" == '{"acknowledged":true}' ] then
     echo ">>> Successfully uploaded MMS Template to Elasticsearch"
 else
     echo ">>> Failed to upload the MMS Template to Elasticsearch"
