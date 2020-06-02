@@ -214,17 +214,13 @@ initialize_apache_jena_fuseki() {
     # docker rm -f $MMS_SPARQL_SERVER_NAME > /dev/null 2>&1
 
     # launch new container
-    docker run -d --rm \
+    docker run -d \
         -p "${s_endpoint_port}:3030" \
         --name $MMS_SPARQL_SERVER_NAME \
         -v /vagrant:/usr/share/data \
         atomgraph/fuseki \
         --mem \
-        --update /ds \
-        --ping \
-        --stats \
-        --update
-
+        --update /ds
 
     # # prepare command string to deduce what container output is telling us
     # read -r -d '' SX_SUBSHELL <<-EOF
