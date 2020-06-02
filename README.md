@@ -15,10 +15,14 @@ as additional tools to help browse the data within MMS.
 > This virtual machine was developed to facilitate the installation of the OpenMBEE MMS server.
 It is intended as a stop-gap solution until a scalable containerized version of the OpenMBEE MMS server can be developed, e.g., using [Kubernetes][kubernetes].
 
-As of Feb 4, 2020, this VM works with [OpenMBEE MMS Docker Image][docker-image] v3.4.2 (latest) and [View Editor (VE)][view-editor] v3.6.1 (latest).  This VM has been successfully deployed and tested in a local Ubuntu 18.04 server; other MMS and VE versions have not been tested.  Additionally, the [Model Development Kit (MDK)][mdk] v4.1.3 (latest) plugin for [MagicDraw][magicdraw] successfully works with the MMS server this repo provisions.
+As of Feb 4, 2020, this VM works with [OpenMBEE MMS Docker Image][docker-image] v3.4.2 (latest) and [View Editor (VE)][view-editor] v3.6.1 (latest).  Additionally, the [Model Development Kit (MDK)][mdk] v4.1.3 (latest) plugin for [MagicDraw][magicdraw] successfully works with the MMS server this repo provisions.  Other MMS and VE versions have not been tested.  
+
+This VM has been successfully deployed and tested in a local Ubuntu 18.04 server, as well as a Windows 10 computer.
 
 
 ## Prerequisites
+Applicable to all operating systems:
+
 1. Install [Vagrant][vagrant].
 
 2. Install [VirtualBox][virtualbox].
