@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-
 echo ">>> Loading environment variables from /vagrant/.env"
+sed -i '/\015/d' /vagrant/.env
+sed -i '/\015/d' /vagrant/.bashrc
 set -a
 . /vagrant/.env
 . /vagrant/.bashrc

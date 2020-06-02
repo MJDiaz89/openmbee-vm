@@ -20,6 +20,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
 
+  config.vm.provision "shell", inline: "sed -i '/\015/d' provision.sh"
   config.vm.provision "shell", path: "provision.sh"
 
   config.vm.post_up_message = "OpenMBEE MMS Virtual Machine has been successfully created.
